@@ -1,34 +1,39 @@
 import express from "express";
 import bodyParser from "body-parser";
 import pg from "pg";
-import fs from "fs";
 import multer from "multer";
-import {dirname} from "path";
-import {fileURLToPath}  from "url"; 
-
+import 'dotenv/config';
  
+// const db = new pg.Client({
+//     user: 'edb_admin',
+//     host: 'p-4zbfkxpqed.pg.biganimal.io',
+//     database: 'departments',
+//     password: '4uInC!Rhul(%mQo=',
+//     port: 5432, // Default PostgreSQL port is 5432
+//   });
+  
 const db = new pg.Client({
-    user: 'postgres', 
-    host: 'localhost', 
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
     database: 'departments', 
-    password: '1234',
-    port: 5000,
+    password: process.env.DB_PASSWORD,
+    port: process.env.DB_PORT, // Default PostgreSQL port is 5432
 }); 
 
 const db2 = new pg.Client({
-    user: 'postgres',
-    host: 'localhost',
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
     database: 'teachers',
-    password: '1234',
-    port: 5000,
+    password: process.env.DB_PASSWORD,
+    port: process.env.DB_PORT, // Default PostgreSQL port is 5432
 }); 
 
 const db3 = new pg.Client({
-    user: 'postgres',
-    host: 'localhost',  
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
     database: 'authentication',
-    password: '1234',
-    port: 5000,
+    password: process.env.DB_PASSWORD,
+    port: process.env.DB_PORT, // Default PostgreSQL port is 5432
 });
 
 let db4 = new pg.Client({
@@ -41,7 +46,7 @@ let db4 = new pg.Client({
 
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = 3000;
 app.use(express.static("public"));
 const upload = multer();
 app.use(bodyParser.urlencoded({ extended: true,limit:'100mb' }));
@@ -359,12 +364,13 @@ app.post("/stu_add_topic", async (req, res) => {
         const topicname =req.body.topic;
         const new_username=req.body.user_name;
         console.log(new_username);
+
         const db4 = new pg.Client({
-            user: 'postgres',
-            host: 'localhost',  
+            user: process.env.DB_USER,
+            host: process.env.DB_HOST,  
             database: `${new_username}`, 
-            password: '1234',
-            port: 5000, 
+            password: process.env.DB_PASSWORD,
+            port: process.env.DB_PORT, 
         });
 db4.connect();
         
@@ -393,12 +399,13 @@ app.post("/show_stu_topic", async (req, res) => {
     const subject = req.body.sub;
     const new_username=req.body.user_name;
     console.log(new_username,department,subject)
+
     const db4 = new pg.Client({
-        user: 'postgres',
-        host: 'localhost',  
+        user: process.env.DB_USER,
+        host: process.env.DB_HOST,  
         database: `${new_username}`,
-        password: '1234',
-        port: 5000, 
+        password: process.env.DB_PASSWORD,
+        port: process.env.DB_PORT, 
     });
 db4.connect();
     const result = await db4.query(`SELECT topic FROM topics WHERE dept_name = $1 AND sub_name = $2`, [department, subject]);
@@ -423,12 +430,13 @@ app.post(`/stu_add_topic_link`,async(req,res)=>{
     const link_title=req.body.body.link_name;
     const link_desc=req.body.body.description;
     const new_username=req.body.user_name;
+
     const db4 = new pg.Client({
-        user: 'postgres',
-        host: 'localhost',  
+        user: process.env.DB_USER,
+        host: process.env.DB_HOST,  
         database: `${new_username}`,
-        password: '1234',
-        port: 5000, 
+        password: process.env.DB_PASSWORD,
+        port: process.env.DB_PORT, 
     });
 db4.connect();
     console.log(link,link_title,link_desc,department,subject,topic)
@@ -473,12 +481,13 @@ app.post(`/stu_add_topic_video`,async(req,res)=>{
     const video_title=req.body.body.link_name;
     const video_desc=req.body.body.description;
     const new_username=req.body.user_name;
+
     const db4 = new pg.Client({
-        user: 'postgres',
-        host: 'localhost',  
+        user: process.env.DB_USER,
+        host: process.env.DB_HOST,  
         database: `${new_username}`,
-        password: '1234',
-        port: 5000, 
+        password: process.env.DB_PASSWORD,
+        port: process.env.DB_PORT, 
     });
 db4.connect();
     const topic_key = await db4.query("SELECT topic_key FROM topics WHERE dept_name = $1 AND sub_name = $2 AND topic = $3", [department, subject,topic]);
@@ -503,12 +512,13 @@ app.post(`/stu_shows_link`,async(req,res)=>{
     const subject=req.body.sub;
     const topic=req.body.topic;
     const new_username=req.body.user_name;
+  
     const db4 = new pg.Client({
-        user: 'postgres',
-        host: 'localhost',  
+        user: process.env.DB_USER,
+        host: process.env.DB_HOST,  
         database: `${new_username}`,
-        password: '1234',
-        port: 5000, 
+        password: process.env.DB_PASSWORD,
+        port: process.env.DB_PORT, 
     });
 db4.connect();
     const topic_key = await db4.query("SELECT topic_key FROM topics WHERE dept_name = $1 AND sub_name = $2 AND topic = $3", [department, subject,topic]);
@@ -538,12 +548,13 @@ app.post(`/stu_shows_video`,async(req,res)=>{
     const subject=req.body.sub;
     const topic=req.body.topic;
     const new_username=req.body.user_name;
+ 
     const db4 = new pg.Client({
-        user: 'postgres',
-        host: 'localhost',  
+        user: process.env.DB_USER,
+        host: process.env.DB_HOST,  
         database: `${new_username}`,
-        password: '1234',
-        port: 5000, 
+        password: process.env.DB_PASSWORD,
+        port: process.env.DB_PORT, 
     });
 db4.connect();
     const topic_key = await db4.query("SELECT topic_key FROM topics WHERE dept_name = $1 AND sub_name = $2 AND  topic = $3", [department, subject, topic]);
@@ -572,12 +583,13 @@ app.post("/stu_show_pdf", async (req, res) => {
     const originalname = req.body.file_n['file_name'];  
     console.log(originalname);
     const new_username=req.body.user_name;
+    
     const db4 = new pg.Client({
-        user: 'postgres',
-        host: 'localhost',  
+        user: process.env.DB_USER,
+        host: process.env.DB_HOST,  
         database: `${new_username}`,
-        password: '1234', 
-        port: 5000, 
+        password: process.env.DB_PASSWORD, 
+        port: process.env.DB_PORT, 
     });
 db4.connect();
       // Fetch the PDF file data from the database
@@ -602,12 +614,13 @@ app.post("/stu_doc_name",async(req,res)=>{
     const subject=req.body.sub;
     const topic=req.body.topic;
     const new_username=req.body.user_name;
+ 
     const db4 = new pg.Client({
-        user: 'postgres',
-        host: 'localhost',  
+        user: process.env.DB_USER,
+        host: process.env.DB_HOST,  
         database: `${new_username}`,
-        password: '1234',
-        port: 5000, 
+        password: process.env.DB_PASSWORD,
+        port: process.env.DB_PORT, 
     });
 db4.connect();
     const topic_key = await db4.query("SELECT topic_key FROM topics WHERE dept_name = $1 AND sub_name = $2 AND topic = $3", [department, subject, topic]);
@@ -639,12 +652,13 @@ app.post("/stu_add_topic_doc", async (req, res) => {
            const document_desc= req.body.description;
            const iconClass=req.body.iconClass;
            const new_username=req.body.user_name;
+
            const db4 = new pg.Client({
-               user: 'postgres',
-               host: 'localhost',  
+            user: process.env.DB_USER,
+            host: process.env.DB_HOST,  
                database: `${new_username}`,
-               password: '1234',
-               port: 5000, 
+               password: process.env.DB_PASSWORD,
+               port: process.env.DB_PORT, 
            });
         console.log(iconClass);
         db4.connect();
@@ -675,12 +689,13 @@ app.post("/stu_delete_document", async (req, res) => {
     const originalname = req.body.file_n['file_name'];  
     console.log(originalname);
     const new_username=req.body.user_name;
+
     const db4 = new pg.Client({
-        user: 'postgres',
-        host: 'localhost',  
+        user: process.env.DB_USER,
+        host: process.env.DB_HOST,  
         database: `${new_username}`,
-        password: '1234',
-        port: 5000, 
+        password: process.env.DB_PASSWORD,
+        port: process.env.DB_PORT, 
     });
       // Fetch the PDF file data from the database
     const topic_key = await db4.query("SELECT topic_key FROM topics WHERE dept_name = $1 AND sub_name = $2 AND topic = $3", [department, subject,topic]);
@@ -705,12 +720,13 @@ app.post("/stu_delete_topic", async (req, res) => {
         const topicname =req.body.topic;
         const new_username=req.body.user_name;
         console.log(new_username);
+
         const db4 = new pg.Client({     
-            user: 'postgres',
-            host: 'localhost',  
+            user: process.env.DB_USER,
+            host: process.env.DB_HOST,  
             database: `${new_username}`, 
-            password: '1234',
-            port: 5000, 
+            password: process.env.DB_PASSWORD,
+            port: process.env.DB_PORT, 
         });
 db4.connect();
             console.log("topic come to delete");
@@ -749,11 +765,11 @@ app.post("/delete_link", async (req, res) => {
     try{
     const new_username=req.body.user_name;
     const db4 = new pg.Client({
-        user: 'postgres',
-        host: 'localhost',  
+        user: process.env.DB_USER,
+        host: process.env.DB_HOST,   
         database: `${new_username}`,
-        password: '1234',
-        port: 5000, 
+        password: process.env.DB_PASSWORD,
+        port: process.env.DB_PORT, 
     });
       // Fetch the PDF file data from the database
     const topic_key = await db4.query("SELECT topic_key FROM topics WHERE dept_name = $1 AND sub_name = $2 AND topic = $3", [department, subject,topic]);
@@ -797,12 +813,13 @@ app.post("/delete_video", async (req, res) => {
    if (roll=="stu"){
     try{
     const new_username=req.body.user_name;
+
     const db4 = new pg.Client({
-        user: 'postgres',
-        host: 'localhost',  
+        user: process.env.DB_USER,
+        host: process.env.DB_HOST,  
         database: `${new_username}`,
-        password: '1234',
-        port: 5000, 
+        password: process.env.DB_PASSWORD,
+        port: process.env.DB_PORT, 
     });
       // Fetch the PDF file data from the database
     const topic_key = await db4.query("SELECT topic_key FROM topics WHERE dept_name = $1 AND sub_name = $2 AND topic = $3", [department, subject,topic]);
@@ -873,12 +890,13 @@ app.post("/register/auth", async(req,res)=>{
     await db3.query("INSERT INTO CREDENTIALS(username,password,role,email) values($1,$2,$3,$4)",[new_username,new_password,the_role,new_email]);
     console.log(new_username); 
     await db3.query(`CREATE DATABASE "${new_username}"`); 
+
     const db4 = new pg.Client({
-        user: 'postgres',  
-        host: 'localhost',  
+        user: process.env.DB_USER,  
+        host: process.env.DB_HOST,  
         database: `${new_username}`, 
-        password: '1234', 
-        port: 5000, 
+        password: process.env.DB_PASSWORD, 
+        port: process.env.DB_PORT, 
     });
     db4.connect();
     await db4.query("create table topics(topic_key serial NOT NULL PRIMARY KEY,dept_name varchar,sub_name varchar,topic text)");
